@@ -5,10 +5,21 @@ import clipboard from 'clipboardy';
 const sq = {g: "🟩", b: "⬛", w: "⬜",}
 const format = {up: 0, low: 1, title: 2, none: 3}
 
+/**
+ * Removes all non-alphabetical characters from a string
+ * @param {string} str String to clean
+ * @returns {string}
+ */
 function cleanString(str) {
     return str.replaceAll(/[^a-z]/gi, "")
 }
 
+/**
+ * Formats a string in a specific case
+ * @param {string} str String to format
+ * @param {number} form Format enum value
+ * @returns {string}
+ */
 function applyFormat(str, form) {
     switch(form) {
         case format.up:
@@ -22,6 +33,15 @@ function applyFormat(str, form) {
     } 
 }
 
+/**
+ * Checks that the inputted Weaver guess sequence is valid  
+ * Does not check that individual words are valid Weaver words
+ * @param {string[]} seq Guess sequence
+ * @param {string} start Starting word
+ * @param {string} final Final (target) word
+ * @param {number} len Game word length
+ * @returns {boolean}
+ */
 function validateSequence(seq, start, final, len) {
     // add start and final as elements
     if (seq[0].toLowerCase() !== start.toLowerCase())
@@ -55,6 +75,14 @@ function validateSequence(seq, start, final, len) {
     return true;
 }
 
+/**
+ * Constructs a row corresponding to a Weaver guess
+ * @param {string} guess Submitted guess
+ * @param {string} final Final (target) word
+ * @param {string} fillerTile Tile to use to mark letters that do not match
+ * @param {boolean} hideInfo True to hide word and position change info, false otherwise
+ * @returns {string}
+ */
 function constructWeaverTableRow(guess, final, fillerTile, hideInfo = true) {
     let count = 0;
     let gSplit = guess.split("");
@@ -72,6 +100,12 @@ function constructWeaverTableRow(guess, final, fillerTile, hideInfo = true) {
     return `${sq.g.repeat(count)}${fillerTile.repeat(guess.length - count)} ${hideInfo ? "||" : ""}\`${guess}\`${hideInfo ? "||" : ""} ${hideInfo ? "||" : ""}${trueRow.join("")}${hideInfo ? "||" : ""}`;
 }
 
+/**
+ * Constructs a full output table for a game of Weaver
+ * @param {string[]} seq 
+ * @param {number} optimal 
+ * @returns {string}
+ */
 function constructWeaverTable(seq, optimal) {
     const date = new Date(Date.now());
     let output = `Weaver ${date.getDate().toString().padStart(2, "0")}/${(date.getMonth() + 1).toString().padStart(2, "0")}/${date.getFullYear()}`;
@@ -84,7 +118,10 @@ function constructWeaverTable(seq, optimal) {
     return output;
 }
 
-// start getting prompts
+/**
+ * Gets prompts from the user, allowing them to create a Weaver table
+ * @returns {object}
+ */
 async function getPrompts() {
     console.log();
 
@@ -157,7 +194,7 @@ async function getPrompts() {
     return {seq: seq, optimal: optimalNum.val, allow_copy: copy.allow}
 }
 
-// run formatter
+// Runs the Weaver formatter
 let inputs = await getPrompts()
 let output = constructWeaverTable(inputs.seq, inputs.optimal)
 console.log(`\n${output}\n`);
