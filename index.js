@@ -97,7 +97,7 @@ function constructWeaverTableRow(guess, final, fillerTile, hideInfo = true) {
             trueRow.push(fillerTile);
         }
     }
-    return `${sq.g.repeat(count)}${fillerTile.repeat(guess.length - count)} ${hideInfo ? "||" : ""}\`${guess}\`${hideInfo ? "||" : ""} ${hideInfo ? "||" : ""}${trueRow.join("")}${hideInfo ? "||" : ""}`;
+    return `${sq.g.repeat(count)}${fillerTile.repeat(guess.length - count)} ${hideInfo ? "||" : "**"}\`${guess}\`${hideInfo ? "||" : "**"} ${hideInfo ? "||" : ""}${trueRow.join("")}${hideInfo ? "||" : ""}`;
 }
 
 /**
